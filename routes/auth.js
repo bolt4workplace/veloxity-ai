@@ -250,8 +250,10 @@ router.post('/login', checkNotAuthenticated, async (req, res) => {
     // Set user session
     req.session.userId = user.id;
 
-    sendLoginEmail(user.email, user.fullName)
-      .catch((emailErr) => console.error('Login email error:', emailErr));
+    setImmediate(() => {
+      sendLoginEmail(user.email, user.fullName)
+        .catch((emailErr) => console.error('Login email error:', emailErr));
+    });
 
     // Redirect to dashboard
     res.redirect('/user/dashboard');
