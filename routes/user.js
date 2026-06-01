@@ -134,42 +134,6 @@ const updateUserBalance = async (userId, newBalance) => {
   return result.value;
 };
 
-const sanitizeNumber = (v) => {
-  if (v === null || v === undefined) return 0;
-  const s = String(v).replace(/[^0-9.-]+/g, '');
-  const n = Number(s);
-  return Number.isFinite(n) ? n : 0;
-};
-
-const safeDeductUserBalance = async (userId, amount) => {
-  const users = await getUsersCollection();
-  const userDoc = await users.findOne({ id: userId });
-  if (!userDoc) return null;
-
-  const currentBalance = sanitizeNumber(userDoc.balance);
-  if (amount > currentBalance) return null;
-
-  const newBalance = Number((currentBalance - amount).toFixed(2));
-
-  try {
-    // Try an atomic update first (best-effort)
-    const updateResult = await users.findOneAndUpdate(
-      { id: userId },
-      { $set: { balance: newBalance } },
-      { returnDocument: 'after' }
-    );
-
-    if (updateResult && updateResult.value) return updateResult.value;
-
-    // Fallback: read and return current document
-    const refreshed = await users.findOne({ id: userId });
-    return refreshed || null;
-  } catch (err) {
-    console.error('safeDeductUserBalance error:', err);
-    return null;
-  }
-};
-
 // Dashboard route
 router.get('/dashboard', (req, res) => {
   const user = req.currentUser;
