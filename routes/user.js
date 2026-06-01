@@ -75,9 +75,51 @@ const saveCredits = (list) => { fs.writeFileSync(creditsPath, JSON.stringify(lis
 
 const getCurrentUser = (req) => req.currentUser || null;
 
+const sanitizeNumber = (v) => {
+  if (v === null || v === undefined) return 0;
+  const s = String(v).replace(/[^0-9.-]+/g, '');
+  const n = Number(s);
+  return Number.isFinite(n) ? n : 0;
+};
+
+const safeDeductUserBalance = async (userId, amount) => {
+  const users = await getUsersCollection();
+  const userDoc = await users.findOne({ id: userId });
+  if (!userDoc) return null;
+
+  const currentBalance = sanitizeNumber(userDoc.balance);
+  if (amount > currentBalance) return null;
+
+  const newBalance = Number((currentBalance - amount).toFixed(2));
+
+  try {
+    const updateResult = await users.findOneAndUpdate(
+      { id: userId },
+      { $set: { balance: newBalance } },
+      { returnDocument: 'after' }
+    );
+
+    if (updateResult && updateResult.value) return updateResult.value;
+
+    const refreshed = await users.findOne({ id: userId });
+    return refreshed || null;
+  } catch (err) {
+    console.error('safeDeductUserBalance error:', err);
+    return null;
+  }
+};
+
 router.use(async (req, res, next) => {
   if (req.session.userId) {
     req.currentUser = await (await getUsersCollection()).findOne({ id: req.session.userId });
+    if (req.currentUser) {
+      // Normalize numeric fields so views and logic always get numbers
+      req.currentUser.balance = sanitizeNumber(req.currentUser.balance);
+      req.currentUser.totalProfit = sanitizeNumber(req.currentUser.totalProfit);
+      req.currentUser.totalDeposit = sanitizeNumber(req.currentUser.totalDeposit);
+      req.currentUser.totalWithdrawal = sanitizeNumber(req.currentUser.totalWithdrawal);
+      req.currentUser.bonus = sanitizeNumber(req.currentUser.bonus);
+    }
   }
   next();
 });
@@ -175,12 +217,12 @@ router.post('/trade', async (req, res) => {
     return res.status(400).json({ error: 'Invalid trade amount' });
   }
   
-  if (tradeAmount > user.balance) {
+  if (tradeAmount > sanitizeNumber(user.balance)) {
     return res.status(400).json({ error: 'Insufficient balance' });
   }
-  
+
   // Update user balance
-  const newBalance = user.balance - tradeAmount;
+  const newBalance = Number((sanitizeNumber(user.balance) - tradeAmount).toFixed(2));
   const updatedUser = await updateUserBalance(user.id, newBalance);
   
   if (!updatedUser) {
@@ -502,11 +544,10 @@ router.post('/join-copy', async (req, res) => {
     return res.json({ success: false, message: `Minimum investment is $${minInvestment.toLocaleString()}` });
   }
 
-  const currentBalance = Number(user.balance) || 0;
+  const currentBalance = sanitizeNumber(user.balance);
   if (amount > currentBalance) {
     return res.json({ success: false, message: 'Insufficient balance', redirect: '/user/deposit' });
   }
-
   const newBalance = Number((currentBalance - amount).toFixed(2));
   try {
     const updated = await safeDeductUserBalance(user.id, amount);
@@ -569,11 +610,10 @@ router.post('/join-plan', async (req, res) => {
     return res.json({ success: false, message: `Minimum investment is $${minInvestment.toLocaleString()}` });
   }
 
-  const currentBalance = Number(user.balance) || 0;
+  const currentBalance = sanitizeNumber(user.balance);
   if (amount > currentBalance) {
     return res.json({ success: false, message: 'Insufficient balance', redirect: '/user/deposit' });
   }
-
   const newBalance = Number((currentBalance - amount).toFixed(2));
   try {
     const updated = await safeDeductUserBalance(user.id, amount);
