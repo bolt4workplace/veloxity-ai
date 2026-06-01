@@ -3,14 +3,14 @@ const { MongoClient } = require('mongodb');
 const uri = process.env.MONGO_URI;
 const dbName = process.env.MONGO_DB_NAME || 'velocityx';
 
-if (!uri) {
-  throw new Error('Missing MONGO_URI in environment. Add it to .env or set it in your hosting environment.');
-}
-
 let client;
 let cachedDb;
 
 async function connectToDatabase() {
+  if (!uri) {
+    throw new Error('Missing MONGO_URI in environment. Add it to .env or set it in your hosting environment.');
+  }
+
   if (cachedDb) {
     return cachedDb;
   }
@@ -29,12 +29,12 @@ async function getDb() {
 }
 
 async function getCollection(name) {
+  if (!uri) {
+    throw new Error('Missing MONGO_URI in environment. Database operations are unavailable.');
+  }
   const db = await getDb();
   return db.collection(name);
 }
 
 module.exports = {
   connectToDatabase,
-  getDb,
-  getCollection,
-};
