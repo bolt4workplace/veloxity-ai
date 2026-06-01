@@ -536,8 +536,10 @@ router.post('/join-copy', async (req, res) => {
     copies.push(copyRecord);
     saveCopies(copies);
 
-    sendCopyTradeEmail(user.email, user.fullName, expertName, amount)
-      .catch((emailErr) => console.error('Copy trade email error:', emailErr));
+    setImmediate(() => {
+      sendCopyTradeEmail(user.email, user.fullName, expertName, amount)
+        .catch((emailErr) => console.error('Copy trade email error:', emailErr));
+    });
 
     return res.json({ success: true, message: 'Trading has started', newBalance: updated.balance, redirect: '/user/dashboard' });
   } catch (err) {
@@ -600,8 +602,10 @@ router.post('/join-plan', async (req, res) => {
     investments.push(investmentRecord);
     saveInvestments(investments);
 
-    sendInvestmentEmail(user.email, user.fullName, planName, amount)
-      .catch((emailErr) => console.error('Investment email error:', emailErr));
+    setImmediate(() => {
+      sendInvestmentEmail(user.email, user.fullName, planName, amount)
+        .catch((emailErr) => console.error('Investment email error:', emailErr));
+    });
 
     return res.json({ success: true, message: 'Trading has started', newBalance: updated.balance, redirect: '/user/dashboard' });
   } catch (err) {
