@@ -1,0 +1,1287 @@
+<!-- Premium Fintech Navigation - Namespace: vx_nav -->
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  /* Top Navigation Bar */
+  .vx_nav_top_bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    border-bottom: 1px solid rgba(51, 65, 85, 0.4);
+    display: flex;
+    align-items: center;
+    padding: 0 32px;
+    gap: 24px;
+    z-index: 1000;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(12px);
+  }
+
+  .vx_nav_logo_section {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex-shrink: 0;
+  }
+
+  .vx_nav_logo_wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .vx_nav_logo_img {
+    height: 32px;
+    width: auto;
+    transition: all 0.3s ease;
+  }
+
+  .vx_nav_logo_img:hover {
+    transform: scale(1.05);
+    filter: brightness(1.2);
+  }
+
+  .vx_nav_logo_subtitle {
+    font-size: 10px;
+    color: #64748b;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .vx_nav_live_indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    background: rgba(34, 197, 94, 0.12);
+    border: 1px solid rgba(34, 197, 94, 0.35);
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #22c55e;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  .vx_nav_live_dot {
+    width: 8px;
+    height: 8px;
+    background: #22c55e;
+    border-radius: 50%;
+    animation: vx_nav_pulse_animation 2s ease-in-out infinite;
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+  }
+
+  @keyframes vx_nav_pulse_animation {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.6;
+      transform: scale(1.15);
+    }
+  }
+
+  .vx_nav_market_tickers {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 0 1 auto;
+    margin-left: 8px;
+  }
+
+  .vx_nav_ticker_card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 18px;
+    background: rgba(30, 41, 59, 0.9);
+    border: 1px solid rgba(71, 85, 105, 0.35);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .vx_nav_ticker_card:hover {
+    border-color: #3b82f6;
+    background: rgba(59, 130, 246, 0.12);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+  }
+
+  .vx_nav_ticker_symbol {
+    font-size: 12px;
+    color: #94a3b8;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+
+  .vx_nav_ticker_price {
+    font-size: 15px;
+    font-weight: 700;
+    color: #ffffff;
+    font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+  }
+
+  .vx_nav_ticker_change {
+    font-size: 12px;
+    color: #22c55e;
+    font-weight: 700;
+    font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+  }
+
+  .vx_nav_ticker_change.negative {
+    color: #ef4444;
+  }
+
+  .vx_nav_flex_spacer {
+    flex: 1;
+  }
+
+  .vx_nav_balance_card {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 10px 20px;
+    background: rgba(30, 41, 59, 0.9);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 160px;
+  }
+
+  .vx_nav_balance_card:hover {
+    border-color: #3b82f6;
+    background: rgba(59, 130, 246, 0.12);
+  }
+
+  .vx_nav_balance_label {
+    font-size: 10px;
+    color: #64748b;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .vx_nav_balance_value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #22c55e;
+    font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+  }
+
+  .vx_nav_top_actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-shrink: 0;
+  }
+
+  .vx_nav_quick_trade_btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: rgba(30, 41, 59, 0.9);
+    border: 1px solid rgba(71, 85, 105, 0.35);
+    border-radius: 8px;
+    color: #e2e8f0;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .vx_nav_quick_trade_btn:hover {
+    border-color: #3b82f6;
+    background: rgba(59, 130, 246, 0.12);
+    color: #3b82f6;
+  }
+
+  .vx_nav_quick_trade_btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .vx_nav_notification_icon {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(30, 41, 59, 0.9);
+    border: 1px solid rgba(71, 85, 105, 0.35);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .vx_nav_notification_icon:hover {
+    border-color: #3b82f6;
+    background: rgba(59, 130, 246, 0.12);
+  }
+
+  .vx_nav_notification_icon svg {
+    width: 20px;
+    height: 20px;
+    color: #cbd5e1;
+  }
+
+  .vx_nav_notification_badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 10px;
+    border: 2px solid #0f172a;
+    min-width: 20px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+  }
+
+  .vx_nav_theme_toggle {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(30, 41, 59, 0.9);
+    border: 1px solid rgba(71, 85, 105, 0.35);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .vx_nav_theme_toggle:hover {
+    border-color: #3b82f6;
+    background: rgba(59, 130, 246, 0.12);
+  }
+
+  .vx_nav_theme_toggle svg {
+    width: 20px;
+    height: 20px;
+    color: #cbd5e1;
+  }
+
+  .vx_nav_user_section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 14px;
+    background: rgba(30, 41, 59, 0.9);
+    border: 1px solid rgba(71, 85, 105, 0.35);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .vx_nav_user_section:hover {
+    border-color: #3b82f6;
+    background: rgba(59, 130, 246, 0.12);
+  }
+
+  .vx_nav_user_avatar {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffff;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+  }
+
+  .vx_nav_user_details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .vx_nav_user_name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 140px;
+  }
+
+  .vx_nav_user_role {
+    font-size: 11px;
+    color: #64748b;
+    font-weight: 500;
+  }
+
+  .vx_nav_user_dropdown_icon {
+    width: 18px;
+    height: 18px;
+    color: #64748b;
+    transition: transform 0.3s ease;
+  }
+
+  .vx_nav_user_section:hover .vx_nav_user_dropdown_icon {
+    transform: rotate(180deg);
+  }
+
+  .vx_nav_hamburger_btn {
+    display: none;
+    width: 44px;
+    height: 44px;
+    background: rgba(30, 41, 59, 0.9);
+    border: 1px solid rgba(71, 85, 105, 0.35);
+    border-radius: 8px;
+    cursor: pointer;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    padding: 10px;
+    transition: all 0.3s ease;
+  }
+
+  .vx_nav_hamburger_btn:hover {
+    border-color: #3b82f6;
+    background: rgba(59, 130, 246, 0.12);
+  }
+
+  .vx_nav_hamburger_line {
+    width: 22px;
+    height: 2px;
+    background: #cbd5e1;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+  }
+
+  .vx_nav_hamburger_btn.active .vx_nav_hamburger_line:nth-child(1) {
+    transform: rotate(45deg) translateY(7px);
+  }
+
+  .vx_nav_hamburger_btn.active .vx_nav_hamburger_line:nth-child(2) {
+    opacity: 0;
+  }
+
+  .vx_nav_hamburger_btn.active .vx_nav_hamburger_line:nth-child(3) {
+    transform: rotate(-45deg) translateY(-7px);
+  }
+
+  /* Sidebar Navigation */
+  .vx_nav_sidebar {
+    position: fixed;
+    left: 0;
+    top: 70px;
+    width: 260px;
+    height: calc(100vh - 70px);
+    background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+    border-right: 1px solid rgba(51, 65, 85, 0.4);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 999;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    scrollbar-width: thin;
+    scrollbar-color: rgba(71, 85, 105, 0.4) transparent;
+  }
+
+  .vx_nav_sidebar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .vx_nav_sidebar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .vx_nav_sidebar::-webkit-scrollbar-thumb {
+    background: rgba(71, 85, 105, 0.4);
+    border-radius: 3px;
+  }
+
+  .vx_nav_sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(71, 85, 105, 0.6);
+  }
+
+  .vx_nav_sidebar_header {
+    padding: 24px 20px;
+    border-bottom: 1px solid rgba(51, 65, 85, 0.3);
+  }
+
+  .vx_nav_user_profile_card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .vx_nav_profile_avatar {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 700;
+    color: #ffffff;
+    flex-shrink: 0;
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.4);
+  }
+
+  .vx_nav_profile_info {
+    flex: 1;
+  }
+
+  .vx_nav_profile_name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 4px;
+    word-break: break-word;
+  }
+
+  .vx_nav_profile_balance_label {
+    font-size: 10px;
+    color: #64748b;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-bottom: 2px;
+  }
+
+  .vx_nav_profile_balance_value {
+    font-size: 16px;
+    font-weight: 700;
+    color: #22c55e;
+    font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+  }
+
+  .vx_nav_online_indicator {
+    width: 12px;
+    height: 12px;
+    background: #22c55e;
+    border-radius: 50%;
+    border: 2px solid #0f172a;
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+  }
+
+  .vx_nav_market_status_card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .vx_nav_market_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .vx_nav_market_title {
+    font-size: 10px;
+    color: #64748b;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .vx_nav_live_badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: rgba(34, 197, 94, 0.12);
+    border: 1px solid rgba(34, 197, 94, 0.35);
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    color: #22c55e;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+  }
+
+  .vx_nav_live_badge_dot {
+    width: 6px;
+    height: 6px;
+    background: #22c55e;
+    border-radius: 50%;
+    animation: vx_nav_pulse_animation 2s ease-in-out infinite;
+  }
+
+  .vx_nav_menu_container {
+    flex: 1;
+    padding: 12px 0;
+  }
+
+  .vx_nav_menu_list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .vx_nav_section_title {
+    font-size: 10px;
+    color: #64748b;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 16px 20px 10px 20px;
+    margin-top: 8px;
+  }
+
+  .vx_nav_section_title:first-child {
+    margin-top: 0;
+    padding-top: 8px;
+  }
+
+  .vx_nav_menu_item {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .vx_nav_menu_link {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 20px;
+    color: #cbd5e1;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+
+  .vx_nav_menu_link::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 4px;
+    background: #3b82f6;
+    transform: scaleY(0);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 0 4px 4px 0;
+  }
+
+  .vx_nav_menu_link:hover {
+    background: rgba(59, 130, 246, 0.12);
+    color: #3b82f6;
+  }
+
+  .vx_nav_menu_link:hover::before {
+    transform: scaleY(1);
+  }
+
+  .vx_nav_menu_item.vx_nav_item_active .vx_nav_menu_link {
+    background: rgba(59, 130, 246, 0.18);
+    color: #3b82f6;
+  }
+
+  .vx_nav_menu_item.vx_nav_item_active .vx_nav_menu_link::before {
+    transform: scaleY(1);
+  }
+
+  .vx_nav_menu_icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    stroke-width: 2;
+  }
+
+  .vx_nav_menu_text {
+    flex: 1;
+    font-weight: 500;
+  }
+
+  .vx_nav_menu_badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    flex-shrink: 0;
+  }
+
+  .vx_nav_badge_pro {
+    background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+  }
+
+  .vx_nav_badge_ai {
+    background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+  }
+
+  .vx_nav_badge_fast {
+    background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+  }
+
+  .vx_nav_badge_ref {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(251, 191, 36, 0.3);
+  }
+
+  .vx_nav_menu_divider {
+    height: 1px;
+    background: rgba(51, 65, 85, 0.3);
+    margin: 16px 20px;
+  }
+
+  .vx_nav_sidebar_footer {
+    padding: 16px 20px;
+    border-top: 1px solid rgba(51, 65, 85, 0.3);
+    background: rgba(15, 23, 42, 0.6);
+  }
+
+  .vx_nav_language_selector {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: rgba(30, 41, 59, 0.9);
+    border: 1px solid rgba(71, 85, 105, 0.35);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .vx_nav_language_selector:hover {
+    border-color: #3b82f6;
+    background: rgba(59, 130, 246, 0.12);
+  }
+
+  .vx_nav_language_flag {
+    width: 28px;
+    height: 20px;
+    object-fit: cover;
+    border-radius: 3px;
+  }
+
+  .vx_nav_language_code {
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+    flex: 1;
+  }
+
+  .vx_nav_language_dropdown_icon {
+    width: 16px;
+    height: 16px;
+    color: #64748b;
+  }
+
+  /* Main Content Wrapper */
+  .vx_nav_main_wrapper {
+    margin-left: 260px;
+    margin-top: 70px;
+    transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 1024px) {
+    .vx_nav_market_tickers {
+      display: none;
+    }
+
+    .vx_nav_quick_trade_btn span {
+      display: none;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .vx_nav_top_bar {
+      padding: 0 16px;
+      height: 64px;
+      gap: 12px;
+    }
+
+    .vx_nav_logo_img {
+      height: 28px;
+    }
+
+    .vx_nav_logo_subtitle {
+      display: none;
+    }
+
+    .vx_nav_live_indicator {
+      font-size: 10px;
+      padding: 5px 10px;
+    }
+
+    .vx_nav_live_dot {
+      width: 6px;
+      height: 6px;
+    }
+
+    .vx_nav_balance_card {
+      min-width: 120px;
+      padding: 8px 14px;
+    }
+
+    .vx_nav_balance_label {
+      font-size: 9px;
+    }
+
+    .vx_nav_balance_value {
+      font-size: 15px;
+    }
+
+    .vx_nav_quick_trade_btn {
+      padding: 10px;
+    }
+
+    .vx_nav_user_details {
+      display: none;
+    }
+
+    .vx_nav_user_dropdown_icon {
+      display: none;
+    }
+
+    .vx_nav_user_avatar {
+      width: 36px;
+      height: 36px;
+      font-size: 14px;
+    }
+
+    .vx_nav_hamburger_btn {
+      display: flex;
+    }
+
+    .vx_nav_sidebar {
+      top: 64px;
+      height: calc(100vh - 64px);
+      width: 75%;
+      max-width: 280px;
+      transform: translateX(-100%);
+      box-shadow: 4px 0 24px rgba(0, 0, 0, 0.6);
+    }
+
+    .vx_nav_sidebar.vx_nav_sidebar_open {
+      transform: translateX(0);
+    }
+
+    .vx_nav_main_wrapper {
+      margin-left: 0;
+      margin-top: 64px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .vx_nav_top_bar {
+      height: 60px;
+      padding: 0 12px;
+      gap: 10px;
+    }
+
+    .vx_nav_logo_img {
+      height: 26px;
+    }
+
+    .vx_nav_balance_card {
+      min-width: 100px;
+      padding: 6px 12px;
+    }
+
+    .vx_nav_balance_label {
+      font-size: 8px;
+    }
+
+    .vx_nav_balance_value {
+      font-size: 14px;
+    }
+
+    .vx_nav_notification_icon,
+    .vx_nav_theme_toggle {
+      width: 40px;
+      height: 40px;
+    }
+
+    .vx_nav_notification_icon svg,
+    .vx_nav_theme_toggle svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .vx_nav_user_avatar {
+      width: 34px;
+      height: 34px;
+      font-size: 13px;
+    }
+
+    .vx_nav_sidebar {
+      top: 60px;
+      height: calc(100vh - 60px);
+      width: 80%;
+      max-width: 260px;
+    }
+
+    .vx_nav_main_wrapper {
+      margin-top: 60px;
+    }
+
+    .vx_nav_menu_link {
+      padding: 12px 16px;
+      font-size: 13px;
+      gap: 12px;
+    }
+
+    .vx_nav_menu_icon {
+      width: 18px;
+      height: 18px;
+    }
+
+    .vx_nav_section_title {
+      padding: 14px 16px 8px 16px;
+    }
+  }
+
+  /* Overlay for mobile sidebar */
+  .vx_nav_overlay {
+    display: none;
+    position: fixed;
+    top: 70px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 998;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .vx_nav_overlay.vx_nav_overlay_visible {
+    display: block;
+    opacity: 1;
+  }
+
+  @media (max-width: 768px) {
+    .vx_nav_overlay {
+      top: 64px;
+    }
+    .vx_nav_quick_trade_btn {
+      display: none !important;
+    }
+    .vx_nav_balance_card {
+      display: none !important;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .vx_nav_overlay {
+      top: 60px;
+    }
+  }
+</style>
+
+<!-- Top Navigation Bar -->
+<nav class="vx_nav_top_bar">
+  <div class="vx_nav_logo_section">
+    <a href="/" aria-label="Home" class="vx_nav_logo_wrapper">
+      <img src="https://i.imgur.com/xkBJBl5.png" alt="VelocityX AI Trading Platform" class="vx_nav_logo_img">
+    </a>
+    <div class="vx_nav_logo_subtitle">Professional Trading</div>
+  </div>
+
+  <div class="vx_nav_live_indicator">
+    <div class="vx_nav_live_dot"></div>
+    <span>LIVE</span>
+  </div>
+
+  <div class="vx_nav_market_tickers">
+    <div class="vx_nav_ticker_card">
+      <span class="vx_nav_ticker_symbol">BTC:</span>
+      <span class="vx_nav_ticker_price" id="vx_nav_btc_price">$64,382</span>
+      <span class="vx_nav_ticker_change" id="vx_nav_btc_change">+2.4%</span>
+    </div>
+    <div class="vx_nav_ticker_card">
+      <span class="vx_nav_ticker_symbol">ETH:</span>
+      <span class="vx_nav_ticker_price" id="vx_nav_eth_price">$2,811</span>
+      <span class="vx_nav_ticker_change" id="vx_nav_eth_change">+1.8%</span>
+    </div>
+  </div>
+
+  <div class="vx_nav_flex_spacer"></div>
+
+  <div class="vx_nav_balance_card" id="vx_nav_balance_card">
+    <div class="vx_nav_balance_label">Account Balance</div>
+    <div class="vx_nav_balance_value">$<%= Number(user.balance || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %></div>
+  </div>
+
+  <div class="vx_nav_top_actions">
+    <button class="vx_nav_quick_trade_btn" id="vx_nav_quick_trade_btn">
+      <i data-lucide="trending-up"></i>
+      <span>Quick Trade</span>
+    </button>
+
+    
+
+
+    <div class="vx_nav_user_section" id="vx_nav_user_section">
+      <div class="vx_nav_user_avatar">
+        <%= user.fullName.charAt(0).toUpperCase() %>
+      </div>
+      <div class="vx_nav_user_details">
+        <div class="vx_nav_user_name"><%= user.fullName %></div>
+        <div class="vx_nav_user_role">Trading Account</div>
+      </div>
+      <i data-lucide="chevron-down" class="vx_nav_user_dropdown_icon"></i>
+    </div>
+  </div>
+
+  <button class="vx_nav_hamburger_btn" id="vx_nav_hamburger_btn">
+    <span class="vx_nav_hamburger_line"></span>
+    <span class="vx_nav_hamburger_line"></span>
+    <span class="vx_nav_hamburger_line"></span>
+  </button>
+</nav>
+
+<!-- Overlay for mobile -->
+<div class="vx_nav_overlay" id="vx_nav_overlay"></div>
+
+<!-- Sidebar Navigation -->
+<nav class="vx_nav_sidebar" id="vx_nav_sidebar">
+  <div class="vx_nav_sidebar_header">
+    <div class="vx_nav_user_profile_card">
+      <div style="position: relative;">
+        <div class="vx_nav_profile_avatar">
+          <%= user.fullName.charAt(0).toUpperCase() %>
+        </div>
+        <div class="vx_nav_online_indicator"></div>
+      </div>
+      <div class="vx_nav_profile_info">
+        <div class="vx_nav_profile_name"><%= user.fullName %></div>
+        <div class="vx_nav_profile_balance_label">Account Balance:</div>
+        <div class="vx_nav_profile_balance_value">$<%= Number(user.balance || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %></div>
+      </div>
+    </div>
+
+    <div class="vx_nav_market_status_card">
+      <div class="vx_nav_market_header">
+        <div class="vx_nav_market_title">LIVE MARKET</div>
+        <div class="vx_nav_live_badge">
+          <div class="vx_nav_live_badge_dot"></div>
+          <span>LIVE</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="vx_nav_menu_container">
+    <ul class="vx_nav_menu_list">
+      <li class="vx_nav_section_title">OVERVIEW</li>
+      <li class="vx_nav_menu_item <%= page === 'dashboard' ? 'vx_nav_item_active' : '' %>">
+        <a href="/user/dashboard" class="vx_nav_menu_link">
+          <i data-lucide="layout-dashboard" class="vx_nav_menu_icon"></i>
+          <span class="vx_nav_menu_text">Dashboard</span>
+        </a>
+      </li>
+      <li class="vx_nav_menu_item <%= page === 'account-statement' ? 'vx_nav_item_active' : '' %>">
+        <a href="/user/account-statement" class="vx_nav_menu_link">
+          <i data-lucide="file-text" class="vx_nav_menu_icon"></i>
+          <span class="vx_nav_menu_text">Account Statement</span>
+        </a>
+      </li>
+
+      <li class="vx_nav_section_title">PORTFOLIO & INVESTMENTS</li>
+      <li class="vx_nav_menu_item <%= page === 'real-estate-plans' ? 'vx_nav_item_active' : '' %>">
+        <a href="/user/real-estate-plans" class="vx_nav_menu_link">
+          <i data-lucide="building-2" class="vx_nav_menu_icon"></i>
+          <span class="vx_nav_menu_text">Investment Plans</span>
+        </a>
+      </li>
+      <li class="vx_nav_menu_item <%= page === 'my-portfolio' ? 'vx_nav_item_active' : '' %>">
+        <a href="/user/my-portfolio" class="vx_nav_menu_link">
+          <i data-lucide="pie-chart" class="vx_nav_menu_icon"></i>
+          <span class="vx_nav_menu_text">My Portfolio</span>
+        </a>
+      </li>
+      <li class="vx_nav_menu_item <%= page === 'performance-history' ? 'vx_nav_item_active' : '' %>">
+        <a href="/user/performance-history" class="vx_nav_menu_link">
+          <i data-lucide="activity" class="vx_nav_menu_icon"></i>
+          <span class="vx_nav_menu_text">Performance History</span>
+        </a>
+      </li>
+
+      <li class="vx_nav_section_title">TRADING & MARKETS</li>
+      <li class="vx_nav_menu_item <%= page === 'copy-trading' ? 'vx_nav_item_active' : '' %>">
+        <a href="/user/copy-trading" class="vx_nav_menu_link">
+          <i data-lucide="users" class="vx_nav_menu_icon"></i>
+          <span class="vx_nav_menu_text">Copy Trading</span>
+          <span class="vx_nav_menu_badge vx_nav_badge_pro">Pro</span>
+        </a>
+      </li>
+      <li class="vx_nav_menu_item <%= page === 'ai-trading-bots' ? 'vx_nav_item_active' : '' %>">
+        <a href="/user/ai-trading-bots" class="vx_nav_menu_link">
+          <i data-lucide="bot" class="vx_nav_menu_icon"></i>
+          <span class="vx_nav_menu_text">AI Trading Bots</span>
+          <span class="vx_nav_menu_badge vx_nav_badge_ai">AI</span>
+        </a>
+      </li>
+
+      <li class="vx_nav_section_title">WALLET & FUNDS</li>
+      <li class="vx_nav_menu_item <%= page === 'deposit' ? 'vx_nav_item_active' : '' %>">
+        <a href="/user/deposit" class="vx_nav_menu_link">
+          <i data-lucide="arrow-down-to-line" class="vx_nav_menu_icon"></i>
+          <span class="vx_nav_menu_text">Deposit Funds</span>
+        </a>
+      </li>
+      <li class="vx_nav_menu_item <%= page === 'withdraw' ? 'vx_nav_item_active' : '' %>">
+        <a href="/user/withdraw" class="vx_nav_menu_link">
+          <i data-lucide="arrow-up-from-line" class="vx_nav_menu_icon"></i>
+          <span class="vx_nav_menu_text">Withdraw Funds</span>
+        </a>
+      </li>
+      <li class="vx_nav_menu_item <%= page === 'internal-transfer' ? 'vx_nav_item_active' : '' %>">
+        <a href="/user/internal-transfer" class="vx_nav_menu_link">
+          <i data-lucide="repeat" class="vx_nav_menu_icon"></i>
+          <span class="vx_nav_menu_text">Internal Transfer</span>
+        </a>
+      </li>
+
+      <li class="vx_nav_section_title">CREDIT & FINANCING</li>
+      <li class="vx_nav_menu_item <%= page === 'apply-credit' ? 'vx_nav_item_active' : '' %>">
+        <a href="/user/apply-credit" class="vx_nav_menu_link">
+          <i data-lucide="zap" class="vx_nav_menu_icon"></i>
+          <span class="vx_nav_menu_text">Apply for Credit</span>
+          <span class="vx_nav_menu_badge vx_nav_badge_fast">Fast</span>
+        </a>
+      </li>
+      <li class="vx_nav_menu_item <%= page === 'credit-history' ? 'vx_nav_item_active' : '' %>">
+        <a href="/user/credit-history" class="vx_nav_menu_link">
+          <i data-lucide="history" class="vx_nav_menu_icon"></i>
+          <span class="vx_nav_menu_text">Credit History</span>
+        </a>
+      </li>
+
+      <li class="vx_nav_section_title">ACCOUNT MANAGEMENT</li>
+      <li class="vx_nav_menu_item <%= page === 'profile-settings' ? 'vx_nav_item_active' : '' %>">
+        <a href="/user/profile-settings" class="vx_nav_menu_link">
+          <i data-lucide="settings" class="vx_nav_menu_icon"></i>
+          <span class="vx_nav_menu_text">Profile Settings</span>
+        </a>
+      </li>
+      <li class="vx_nav_menu_item <%= page === 'identity-verification' ? 'vx_nav_item_active' : '' %>">
+        <a href="/user/identity-verification" class="vx_nav_menu_link">
+          <i data-lucide="shield-check" class="vx_nav_menu_icon"></i>
+          <span class="vx_nav_menu_text">Identity Verification</span>
+        </a>
+      </li>
+
+      <li class="vx_nav_section_title">GROWTH & REWARDS</li>
+      <li class="vx_nav_menu_item <%= page === 'referral-program' ? 'vx_nav_item_active' : '' %>">
+        <a href="/user/referral-program" class="vx_nav_menu_link">
+          <i data-lucide="gift" class="vx_nav_menu_icon"></i>
+          <span class="vx_nav_menu_text">Referral Program</span>
+          <span class="vx_nav_menu_badge vx_nav_badge_ref">5%</span>
+        </a>
+      </li>
+
+      <li class="vx_nav_section_title">SUPPORT & HELP</li>
+      <li class="vx_nav_menu_item <%= page === 'support-center' ? 'vx_nav_item_active' : '' %>">
+        <a href="/user/support-center" class="vx_nav_menu_link">
+          <i data-lucide="headphones" class="vx_nav_menu_icon"></i>
+          <span class="vx_nav_menu_text">Support Center</span>
+        </a>
+      </li>
+
+      <li class="vx_nav_menu_divider"></li>
+
+      <li class="vx_nav_menu_item">
+        <a href="/logout" class="vx_nav_menu_link" id="vx_nav_logout_link">
+          <i data-lucide="log-out" class="vx_nav_menu_icon"></i>
+          <span class="vx_nav_menu_text">Sign Out</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="vx_nav_sidebar_footer">
+    <div class="vx_nav_language_selector" id="vx_nav_language_selector">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 30'%3E%3Cclippath id='t'%3E%3Cpath d='M30 15h30v15zv15H0zH0V0zV0h30z'/%3E%3C/clippath%3E%3Cpath d='M0 0v30h60V0z' fill='%23012169'/%3E%3Cpath d='M0 0l60 30m0-30L0 30' stroke='%23fff' stroke-width='6'/%3E%3Cpath d='M0 0l60 30m0-30L0 30' clip-path='url(%23t)' stroke='%23C8102E' stroke-width='4'/%3E%3Cpath d='M30 0v30M0 15h60' stroke='%23fff' stroke-width='10'/%3E%3Cpath d='M30 0v30M0 15h60' stroke='%23C8102E' stroke-width='6'/%3E%3C/svg%3E"
+           alt="English"
+           class="vx_nav_language_flag">
+      <span class="vx_nav_language_code">EN</span>
+      <i data-lucide="chevron-down" class="vx_nav_language_dropdown_icon"></i>
+    </div>
+  </div>
+</nav>
+
+<!-- Main Content Wrapper -->
+<div class="vx_nav_main_wrapper" id="vx_nav_main_wrapper">
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var hamburgerBtn = document.getElementById('vx_nav_hamburger_btn');
+    var sidebar = document.getElementById('vx_nav_sidebar');
+    var overlay = document.getElementById('vx_nav_overlay');
+    var menuLinks = document.querySelectorAll('.vx_nav_menu_link');
+
+    function toggleMobileSidebar() {
+      var isOpen = sidebar.classList.contains('vx_nav_sidebar_open');
+
+      if (isOpen) {
+        sidebar.classList.remove('vx_nav_sidebar_open');
+        overlay.classList.remove('vx_nav_overlay_visible');
+        hamburgerBtn.classList.remove('active');
+      } else {
+        sidebar.classList.add('vx_nav_sidebar_open');
+        overlay.classList.add('vx_nav_overlay_visible');
+        hamburgerBtn.classList.add('active');
+      }
+    }
+
+    function closeMobileSidebar() {
+      sidebar.classList.remove('vx_nav_sidebar_open');
+      overlay.classList.remove('vx_nav_overlay_visible');
+      hamburgerBtn.classList.remove('active');
+    }
+
+    if (hamburgerBtn) {
+      hamburgerBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleMobileSidebar();
+      });
+    }
+
+    if (overlay) {
+      overlay.addEventListener('click', closeMobileSidebar);
+    }
+
+    menuLinks.forEach(function(link) {
+      link.addEventListener('click', function() {
+        if (window.innerWidth <= 768) {
+          setTimeout(closeMobileSidebar, 200);
+        }
+      });
+    });
+
+    window.addEventListener('resize', function() {
+      if (window.innerWidth > 768) {
+        closeMobileSidebar();
+      }
+    });
+
+    var notificationBtn = document.getElementById('vx_nav_notification_btn');
+    if (notificationBtn) {
+      notificationBtn.addEventListener('click', function() {
+        console.log('Notifications clicked - implement dropdown');
+      });
+    }
+
+    var themeToggleBtn = document.getElementById('vx_nav_theme_toggle_btn');
+    if (themeToggleBtn) {
+      themeToggleBtn.addEventListener('click', function() {
+        console.log('Theme toggle clicked - implement theme switching');
+      });
+    }
+
+    var userSection = document.getElementById('vx_nav_user_section');
+    if (userSection) {
+      userSection.addEventListener('click', function() {
+        console.log('User section clicked - implement user menu dropdown');
+      });
+    }
+
+    var quickTradeBtn = document.getElementById('vx_nav_quick_trade_btn');
+    if (quickTradeBtn) {
+      quickTradeBtn.addEventListener('click', function() {
+        console.log('Quick trade clicked - implement quick trade modal');
+      });
+    }
+
+    var languageSelector = document.getElementById('vx_nav_language_selector');
+    if (languageSelector) {
+      languageSelector.addEventListener('click', function() {
+        console.log('Language selector clicked - implement language dropdown');
+      });
+    }
+
+    var balanceCard = document.getElementById('vx_nav_balance_card');
+    if (balanceCard) {
+      balanceCard.addEventListener('click', function() {
+        console.log('Balance card clicked - show balance details');
+      });
+    }
+
+    function updateLivePrices() {
+      var btcPrice = document.getElementById('vx_nav_btc_price');
+      var ethPrice = document.getElementById('vx_nav_eth_price');
+      var btcChange = document.getElementById('vx_nav_btc_change');
+      var ethChange = document.getElementById('vx_nav_eth_change');
+
+      if (btcPrice && ethPrice) {
+        var btcBase = 64382;
+        var ethBase = 2811;
+        var btcVariation = (Math.random() - 0.5) * 200;
+        var ethVariation = (Math.random() - 0.5) * 20;
+
+        var newBtcPrice = btcBase + btcVariation;
+        var newEthPrice = ethBase + ethVariation;
+
+        btcPrice.textContent = '$' + newBtcPrice.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        ethPrice.textContent = '$' + newEthPrice.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+        var btcChangePercent = ((btcVariation / btcBase) * 100).toFixed(1);
+        var ethChangePercent = ((ethVariation / ethBase) * 100).toFixed(1);
+
+        if (btcChange) {
+          btcChange.textContent = (btcChangePercent >= 0 ? '+' : '') + btcChangePercent + '%';
+          btcChange.className = 'vx_nav_ticker_change' + (btcChangePercent >= 0 ? '' : ' negative');
+        }
+
+        if (ethChange) {
+          ethChange.textContent = (ethChangePercent >= 0 ? '+' : '') + ethChangePercent + '%';
+          ethChange.className = 'vx_nav_ticker_change' + (ethChangePercent >= 0 ? '' : ' negative');
+        }
+      }
+    }
+
+    setInterval(updateLivePrices, 5000);
+
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
+
+    setTimeout(function() {
+      if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+      }
+    }, 100);
+  });
+</script>

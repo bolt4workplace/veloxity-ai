@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Trading Platform</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link href="https://i.imgur.com/xnzyBi9.png" rel="shortcut icon"/>
+</head>
+<body>
+  <div class="admin-container">
+    <header class="admin-header">
+      <h1>Admin Dashboard</h1>
+      <% const activeView = typeof view !== 'undefined' ? view : 'users'; %>
+      <div class="admin-tabs">
+        <button class="admin-tab <%= activeView === 'users' ? 'active' : '' %>" onclick="window.location.href='/admin/dashboard?view=users'">Users</button>
+        <button class="admin-tab <%= activeView === 'withdrawals' ? 'active' : '' %>" onclick="window.location.href='/admin/dashboard?view=withdrawals'">Withdrawals</button>
+        <button class="admin-tab <%= activeView === 'deposits' ? 'active' : '' %>" onclick="window.location.href='/admin/dashboard?view=deposits'">Deposits</button>
+        <button class="admin-tab <%= activeView === 'kyc' ? 'active' : '' %>" onclick="window.location.href='/admin/dashboard?view=kyc'">KYC</button>
+        <button class="admin-tab <%= activeView === 'credits' ? 'active' : '' %>" onclick="window.location.href='/admin/dashboard?view=credits'">Credits</button>
+      </div>
+      <div class="admin-actions">
+        <a href="/logout" class="btn btn-sm btn-outline">Logout</a>
+      </div>
+    </header>
+    
+    <main class="admin-content">
+      <% if (success) { %>
+        <div class="alert alert-success">
+          Action completed successfully
+        </div>
+      <% } %>
+
+      <% if (activeView === 'users') { %>
+        <div class="search-section">
+          <h2>User Management</h2>
+          <form action="/admin/dashboard" method="GET" class="search-form">
+            <div class="search-input">
+              <input 
+                type="text" 
+                name="search" 
+                placeholder="Search by ID or name..." 
+                value="<%= query %>"
+              >
+              <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+          </form>
+        </div>
+        
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Country</th>
+                <th>Balance</th>
+                <th>Trading Status</th>
+                <th>Referrals</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (users.length === 0) { %>
+                <tr>
+                  <td colspan="7" class="no-results">No users found</td>
+                </tr>
+              <% } else { %>
+                <% users.forEach(user => { %>
+                  <tr>
+                    <td><%= user.id.substring(0, 8) %>...</td>
+                    <td><%= user.fullName %></td>
+                    <td><%= user.email %></td>
+                    <td><%= user.country %></td>
+                    <td>$<%= Number(user.balance || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %></td>
+                    <td>
+                      <span class="status-badge <%= user.canTrade ? 'status-approved' : 'status-pending' %>">
+                        <%= user.canTrade ? 'Approved' : 'Pending' %>
+                      </span>
+                    </td>
+                    <td><%= user.referralsCount || 0 %></td>
+                    <td class="action-buttons">
+                      <a class="btn btn-sm btn-outline" href="/admin/user/<%= user.id %>">View</a>
+                      <button
+                        class="btn btn-sm btn-primary"
+                        onclick="openEditModal('<%= user.id %>', '<%= user.fullName %>', <%= user.balance %>, 'balance')"
+                      >Balance</button>
+                      <button
+                        class="btn btn-sm btn-info"
+                        onclick="openEditMetricModal(this)"
+                        data-user-id="<%= user.id %>"
+                        data-user-name="<%= user.fullName %>"
+                        data-total-profit="<%= user.totalProfit || 0 %>"
+                        data-total-deposit="<%= user.totalDeposit || 0 %>"
+                        data-total-withdrawal="<%= user.totalWithdrawal || 0 %>"
+                        data-bonus="<%= user.bonus || 0 %>"
+                      >Profit</button>
+                      <button
+                        class="btn btn-sm btn-info"
+                        onclick="openEditMetricModal(this)"
+                        data-user-id="<%= user.id %>"
+                        data-user-name="<%= user.fullName %>"
+                        data-total-profit="<%= user.totalProfit || 0 %>"
+                        data-total-deposit="<%= user.totalDeposit || 0 %>"
+                        data-total-withdrawal="<%= user.totalWithdrawal || 0 %>"
+                        data-bonus="<%= user.bonus || 0 %>"
+                      >Deposit</button>
+                      <button
+                        class="btn btn-sm btn-info"
+                        onclick="openEditMetricModal(this)"
+                        data-user-id="<%= user.id %>"
+                        data-user-name="<%= user.fullName %>"
+                        data-total-profit="<%= user.totalProfit || 0 %>"
+                        data-total-deposit="<%= user.totalDeposit || 0 %>"
+                        data-total-withdrawal="<%= user.totalWithdrawal || 0 %>"
+                        data-bonus="<%= user.bonus || 0 %>"
+                      >Withdraw</button>
+                      <button
+                        class="btn btn-sm btn-info"
+                        onclick="openEditMetricModal(this)"
+                        data-user-id="<%= user.id %>"
+                        data-user-name="<%= user.fullName %>"
+                        data-total-profit="<%= user.totalProfit || 0 %>"
+                        data-total-deposit="<%= user.totalDeposit || 0 %>"
+                        data-total-withdrawal="<%= user.totalWithdrawal || 0 %>"
+                        data-bonus="<%= user.bonus || 0 %>"
+                      >Bonus</button>
+                      <% if (!user.canTrade) { %>
+                        <form action="/admin/user/<%= user.id %>/toggle-trading" method="POST" style="display: inline;">
+                          <input type="hidden" name="action" value="approve">
+                          <button type="submit" class="btn btn-sm btn-success">Approve Trading</button>
+                        </form>
+                      <% } else { %>
+                        <form action="/admin/user/<%= user.id %>/toggle-trading" method="POST" style="display: inline;">
+                          <input type="hidden" name="action" value="reject">
+                          <button type="submit" class="btn btn-sm btn-danger">Reject Trading</button>
+                        </form>
+                      <% } %>
+                    </td>
+                  </tr>
+                <% }) %>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+
+      <% } else if (activeView === 'withdrawals') { %>
+        <div class="section-header">
+          <h2>Withdrawal Requests</h2>
+        </div>
+        
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>User</th>
+                <th>Amount</th>
+                <th>Bitcoin Address</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (withdrawals.length === 0) { %>
+                <tr>
+                  <td colspan="6" class="no-results">No withdrawal requests</td>
+                </tr>
+              <% } else { %>
+                <% withdrawals.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).forEach(withdrawal => { %>
+                  <tr>
+                    <td><%= new Date(withdrawal.createdAt).toLocaleString() %></td>
+                    <td><%= withdrawal.userName %></td>
+                    <td>$<%= withdrawal.amount.toFixed(2) %></td>
+                    <td><%= withdrawal.bitcoinAddress %></td>
+                    <td>
+                      <span class="status-badge status-<%= withdrawal.status %>">
+                        <%= withdrawal.status %>
+                      </span>
+                    </td>
+                    <td class="action-buttons">
+                      <% if (withdrawal.status === 'pending') { %>
+                        <form action="/admin/withdrawal/<%= withdrawal.id %>/approve" method="POST" style="display: inline;">
+                          <button type="submit" class="btn btn-sm btn-success">Approve</button>
+                        </form>
+                        <form action="/admin/withdrawal/<%= withdrawal.id %>/reject" method="POST" style="display: inline;">
+                          <button type="submit" class="btn btn-sm btn-danger">Reject</button>
+                        </form>
+                      <% } %>
+                    </td>
+                  </tr>
+                <% }) %>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+
+      <% } else if (activeView === 'deposits') { %>
+        <div class="section-header">
+          <h2>Deposit Requests</h2>
+        </div>
+        
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>User</th>
+                <th>Amount</th>
+                <th>Cryptocurrency</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (deposits.length === 0) { %>
+                <tr>
+                  <td colspan="6" class="no-results">No deposit requests</td>
+                </tr>
+              <% } else { %>
+                <% deposits.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).forEach(deposit => { %>
+                  <tr>
+                    <td><%= new Date(deposit.createdAt).toLocaleString() %></td>
+                    <td><%= deposit.userName %></td>
+                    <td>$<%= deposit.amount.toFixed(2) %></td>
+                    <td><%= deposit.cryptocurrency %></td>
+                    <td>
+                      <span class="status-badge status-<%= deposit.status %>">
+                        <%= deposit.status %>
+                      </span>
+                    </td>
+                    <td class="action-buttons">
+                      <% if (deposit.status === 'pending') { %>
+                        <form action="/admin/deposit/<%= deposit.id %>/approve" method="POST" style="display: inline;">
+                          <button type="submit" class="btn btn-sm btn-success">Approve</button>
+                        </form>
+                        <form action="/admin/deposit/<%= deposit.id %>/reject" method="POST" style="display: inline;">
+                          <button type="submit" class="btn btn-sm btn-danger">Reject</button>
+                        </form>
+                      <% } %>
+                    </td>
+                  </tr>
+                <% }) %>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      <% } %>
+      <% if (activeView === 'kyc') { %>
+        <div class="section-header"><h2>KYC Submissions</h2></div>
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr><th>Date</th><th>User</th><th>Full Name</th><th>ID Number</th><th>Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+              <% if (!kyc || kyc.length === 0) { %>
+                <tr><td colspan="6" class="no-results">No KYC submissions</td></tr>
+              <% } else { %>
+                <% kyc.sort((a,b)=> new Date(b.createdAt)-new Date(a.createdAt)).forEach(item=>{ %>
+                  <tr>
+                    <td><%= new Date(item.createdAt).toLocaleString() %></td>
+                    <td><%= item.userName %></td>
+                    <td><%= item.fullName %></td>
+                    <td><%= item.idNumber %></td>
+                    <td><span class="status-badge status-<%= item.status %>"><%= item.status %></span></td>
+                    <td class="action-buttons">
+                      <% if (item.status === 'pending') { %>
+                        <form action="/admin/kyc/<%= item.id %>/approve" method="POST" style="display:inline;"><button class="btn btn-sm btn-success">Approve</button></form>
+                        <form action="/admin/kyc/<%= item.id %>/reject" method="POST" style="display:inline;"><button class="btn btn-sm btn-danger">Reject</button></form>
+                      <% } %>
+                    </td>
+                  </tr>
+                <% }) %>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      <% } else if (activeView === 'credits') { %>
+        <div class="section-header"><h2>Credit Requests</h2></div>
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr><th>Date</th><th>User</th><th>Amount</th><th>Reason</th><th>Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+              <% if (!credits || credits.length === 0) { %>
+                <tr><td colspan="6" class="no-results">No credit requests</td></tr>
+              <% } else { %>
+                <% credits.sort((a,b)=> new Date(b.createdAt)-new Date(a.createdAt)).forEach(req=>{ %>
+                  <tr>
+                    <td><%= new Date(req.createdAt).toLocaleString() %></td>
+                    <td><%= req.userName %></td>
+                    <td>$<%= req.amount.toFixed(2) %></td>
+                    <td><%= req.reason %></td>
+                    <td><span class="status-badge status-<%= req.status %>"><%= req.status %></span></td>
+                    <td class="action-buttons">
+                      <% if (req.status === 'pending') { %>
+                        <form action="/admin/credit/<%= req.id %>/approve" method="POST" style="display:inline;"><button class="btn btn-sm btn-success">Approve</button></form>
+                        <form action="/admin/credit/<%= req.id %>/reject" method="POST" style="display:inline;"><button class="btn btn-sm btn-danger">Reject</button></form>
+                      <% } %>
+                    </td>
+                  </tr>
+                <% }) %>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      <% } %>
+    </main>
+  </div>
+
+  <!-- Edit Balance Modal -->
+  <div id="editBalanceModal" class="modal">
+    <div class="modal-content">
+      <h3>Edit User Balance</h3>
+      <form id="editBalanceForm" action="/admin/user/update-balance" method="POST">
+        <input type="hidden" id="editUserId" name="userId">
+        <div class="form-group">
+          <label>User: <span id="editUserName"></span></label>
+        </div>
+        <div class="form-group">
+          <label for="newBalance">New Balance</label>
+          <div class="input-group">
+            <span class="input-prefix">$</span>
+            <input type="number" id="newBalance" name="balance" step="0.01" min="0" required>
+          </div>
+        </div>
+        <div class="modal-buttons">
+          <button type="submit" class="btn btn-primary">Update Balance</button>
+          <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Stats Modal -->
+  <div id="editStatsModal" class="modal">
+    <div class="modal-content">
+      <h3>Edit User Metrics</h3>
+      <form id="editMetricsForm" action="/admin/user/update-stats" method="POST">
+        <input type="hidden" id="editStatsUserId" name="userId">
+        <div class="form-group">
+          <label>User: <span id="editMetricsUserName"></span></label>
+        </div>
+        <div class="form-group">
+          <label for="editTotalProfit">Total Profit</label>
+          <div class="input-group">
+            <span class="input-prefix">$</span>
+            <input type="number" id="editTotalProfit" name="totalProfit" step="0.01" min="0" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="editTotalDeposit">Total Deposit</label>
+          <div class="input-group">
+            <span class="input-prefix">$</span>
+            <input type="number" id="editTotalDeposit" name="totalDeposit" step="0.01" min="0" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="editTotalWithdrawal">Total Withdrawal</label>
+          <div class="input-group">
+            <span class="input-prefix">$</span>
+            <input type="number" id="editTotalWithdrawal" name="totalWithdrawal" step="0.01" min="0" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="editBonus">Bonus</label>
+          <div class="input-group">
+            <span class="input-prefix">$</span>
+            <input type="number" id="editBonus" name="bonus" step="0.01" min="0" required>
+          </div>
+        </div>
+        <div class="modal-buttons">
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+          <button type="button" class="btn btn-secondary" onclick="closeEditMetricModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function openEditModal(userId, userName, currentBalance) {
+      const modal = document.getElementById('editBalanceModal');
+      const form = document.getElementById('editBalanceForm');
+      const userIdInput = document.getElementById('editUserId');
+      const userNameSpan = document.getElementById('editUserName');
+      const balanceInput = document.getElementById('newBalance');
+      
+      userIdInput.value = userId;
+      userNameSpan.textContent = userName;
+      balanceInput.value = currentBalance;
+      
+      modal.classList.add('show');
+      
+      // Update form action
+      form.action = `/admin/user/${userId}/update-balance`;
+    }
+
+    function closeEditModal() {
+      const modal = document.getElementById('editBalanceModal');
+      modal.classList.remove('show');
+    }
+
+    function openEditMetricModal(button) {
+      const modal = document.getElementById('editStatsModal');
+      const form = document.getElementById('editMetricsForm');
+      const userIdInput = document.getElementById('editStatsUserId');
+      const userNameSpan = document.getElementById('editMetricsUserName');
+      const totalProfitInput = document.getElementById('editTotalProfit');
+      const totalDepositInput = document.getElementById('editTotalDeposit');
+      const totalWithdrawalInput = document.getElementById('editTotalWithdrawal');
+      const bonusInput = document.getElementById('editBonus');
+
+      const userId = button.dataset.userId;
+      const userName = button.dataset.userName;
+      const totalProfit = button.dataset.totalProfit || '0';
+      const totalDeposit = button.dataset.totalDeposit || '0';
+      const totalWithdrawal = button.dataset.totalWithdrawal || '0';
+      const bonus = button.dataset.bonus || '0';
+
+      userIdInput.value = userId;
+      userNameSpan.textContent = userName;
+      totalProfitInput.value = parseFloat(totalProfit).toFixed(2);
+      totalDepositInput.value = parseFloat(totalDeposit).toFixed(2);
+      totalWithdrawalInput.value = parseFloat(totalWithdrawal).toFixed(2);
+      bonusInput.value = parseFloat(bonus).toFixed(2);
+
+      form.action = `/admin/user/${userId}/update-stats`;
+      modal.classList.add('show');
+    }
+
+    function closeEditMetricModal() {
+      const modal = document.getElementById('editStatsModal');
+      modal.classList.remove('show');
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      const balanceModal = document.getElementById('editBalanceModal');
+      const statsModal = document.getElementById('editStatsModal');
+      if (event.target === balanceModal) {
+        closeEditModal();
+      }
+      if (event.target === statsModal) {
+        closeEditMetricModal();
+      }
+    }
+  </script>
+</body>
+</html>

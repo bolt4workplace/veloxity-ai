@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment - Trading Platform</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link href="https://i.imgur.com/xnzyBi9.png" rel="shortcut icon"/>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+    .vx_rt_payment_container {
+      max-width: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0.5em 0.5em;;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: transparent;
+      color: #e2e8f0;
+      animation: vx_fadeIn 0.6s ease-out;
+    }
+
+    @keyframes vx_fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .vx_rt_secure_badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 50px;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      color: #3b82f6;
+      margin-bottom: 1.5rem;
+      animation: vx_pulse 2s infinite;
+    }
+
+    @keyframes vx_pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
+      50% { box-shadow: 0 0 0 8px rgba(59, 130, 246, 0); }
+    }
+
+    .vx_rt_secure_icon {
+      width: 16px;
+      height: 16px;
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .vx_rt_secure_icon::before {
+      content: '';
+      position: absolute;
+      width: 8px;
+      height: 10px;
+      border: 2px solid #ffffff;
+      border-top: 3px solid #ffffff;
+      border-radius: 3px 3px 0 0;
+      top: 2px;
+    }
+
+    .vx_rt_secure_icon::after {
+      content: '';
+      position: absolute;
+      width: 8px;
+      height: 5px;
+      background: #ffffff;
+      border-radius: 0 0 2px 2px;
+      bottom: 2px;
+    }
+
+    .vx_rt_header_section {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .vx_rt_main_heading {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      background: linear-gradient(135deg, #ffffff, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .vx_rt_sub_heading {
+      font-size: 1.125rem;
+      color: #94a3b8;
+    }
+
+    .vx_rt_crypto_name {
+      color: #3b82f6;
+      font-weight: 600;
+    }
+
+    .vx_rt_crypto_logo_display {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .vx_rt_crypto_logo {
+      width: 80px;
+      height: 80px;
+      background: rgba(59, 130, 246, 0.1);
+      border: 2px solid rgba(59, 130, 246, 0.3);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: vx_logoGlow 3s ease-in-out infinite;
+      padding: 8px;
+    }
+
+    .vx_rt_crypto_logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 12px rgba(59, 130, 246, 0.4));
+      animation: vx_logoFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes vx_logoGlow {
+      0%, 100% {
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+        transform: scale(1);
+      }
+      50% {
+        box-shadow: 0 0 40px rgba(59, 130, 246, 0.6);
+        transform: scale(1.05);
+      }
+    }
+
+    @keyframes vx_logoFloat {
+      0%, 100% { transform: translateY(0px) rotateY(0deg); }
+      50% { transform: translateY(-8px) rotateY(180deg); }
+    }
+
+    .vx_rt_progress_stepper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin: 2rem 0 3rem;
+      position: relative;
+    }
+
+    .vx_rt_step {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      z-index: 2;
+    }
+
+    .vx_rt_step_circle {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 1.125rem;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .vx_rt_step_circle.active {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: #ffffff;
+      box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4);
+      animation: vx_scaleIn 0.5s ease-out;
+    }
+
+    .vx_rt_step_circle.completed {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #ffffff;
+      box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+    }
+
+    .vx_rt_step_circle.completed::before {
+      content: '';
+      position: absolute;
+      width: 10px;
+      height: 16px;
+      border: 3px solid #ffffff;
+      border-top: none;
+      border-left: none;
+      transform: rotate(45deg) translateY(-2px);
+    }
+
+    .vx_rt_step_circle.pending {
+      background: rgba(71, 85, 105, 0.4);
+      color: #64748b;
+      border: 2px solid rgba(100, 116, 139, 0.3);
+    }
+
+    @keyframes vx_scaleIn {
+      0% { transform: scale(0.8); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .vx_rt_step_label {
+      font-size: 0.875rem;
+      color: #94a3b8;
+      margin-left: 0.5rem;
+    }
+
+    .vx_rt_step_connector {
+      width: 80px;
+      height: 2px;
+      background: rgba(71, 85, 105, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .vx_rt_step_connector.completed::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, #10b981, #3b82f6);
+      animation: vx_slideIn 0.6s ease-out;
+    }
+
+    @keyframes vx_slideIn {
+      from { transform: translateX(-100%); }
+      to { transform: translateX(0); }
+    }
+
+    .vx_rt_main_content_grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .vx_rt_payment_card {
+      background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%);
+      border-radius: 24px;
+      padding: 2.5rem;
+      border: 1px solid rgba(51, 65, 85, 0.5);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      position: relative;
+      overflow: hidden;
+      animation: vx_slideUp 0.6s ease-out;
+    }
+
+    @keyframes vx_slideUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .vx_rt_payment_card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.5), transparent);
+    }
+
+    .vx_rt_card_header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .vx_rt_card_title_group {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .vx_rt_card_icon_box {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.1));
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      position: relative;
+    }
+
+    .vx_rt_card_icon_box::before {
+      content: '';
+      position: absolute;
+      width: 24px;
+      height: 16px;
+      background: #3b82f6;
+      border-radius: 4px;
+      bottom: 14px;
+    }
+
+    .vx_rt_card_icon_box::after {
+      content: '';
+      position: absolute;
+      width: 28px;
+      height: 20px;
+      border: 3px solid #3b82f6;
+      border-radius: 6px;
+      top: 12px;
+    }
+
+    .vx_rt_card_title_text h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 0.25rem;
+    }
+
+    .vx_rt_card_subtitle {
+      font-size: 0.75rem;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .vx_rt_card_subtitle_logo {
+      width: 1px;
+      height: 1px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .vx_rt_card_subtitle_logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .vx_rt_badge_group {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .vx_rt_badge {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.5rem 0.5rem;
+      border-radius: 50px;
+      font-size: 0.5rem;
+      font-weight: 600;
+      border: 1px solid;
+    }
+
+    .vx_rt_badge.ssl {
+      background: rgba(16, 185, 129, 0.1);
+      border-color: rgba(16, 185, 129, 0.3);
+      color: #10b981;
+    }
+
+    .vx_rt_badge.support {
+      background: rgba(59, 130, 246, 0.1);
+      border-color: rgba(59, 130, 246, 0.3);
+      color: #3b82f6;
+    }
+
+    .vx_rt_badge_icon {
+      width: 10px;
+      height: 10px;
+      background: currentColor;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .vx_rt_amount_section {
+      background: rgba(59, 130, 246, 0.08);
+      border: 2px solid rgba(59, 130, 246, 0.2);
+      border-radius: 20px;
+      padding: 0.5rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .vx_rt_amount_section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+      animation: vx_rotate 20s linear infinite;
+    }
+
+    @keyframes vx_rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .vx_rt_amount_label {
+      font-size: 0.875rem;
+      color: #94a3b8;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .vx_rt_amount_icon {
+      width: 20px;
+      height: 20px;
+      background: #3b82f6;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .vx_rt_amount_icon::before {
+      content: '$';
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 0.75rem;
+    }
+
+    .vx_rt_amount_value {
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 1rem;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.25rem;
+    }
+
+    .vx_rt_currency_symbol {
+      font-size: 2rem;
+      color: #3b82f6;
+    }
+
+    .vx_rt_warning_banner {
+      background: rgba(234, 179, 8, 0.1);
+      border: 1px solid rgba(234, 179, 8, 0.3);
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: #eab308;
+      position: relative;
+      z-index: 1;
+    }
+
+    .vx_rt_warning_icon {
+      width: 20px;
+      height: 20px;
+      background: #eab308;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      font-weight: 700;
+      color: #0f172a;
+      font-size: 0.875rem;
+    }
+
+    .vx_rt_warning_icon::before {
+      content: '!';
+    }
+
+    .vx_rt_instructions_section {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(51, 65, 85, 0.5);
+      border-radius: 16px;
+      padding: 0.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .vx_rt_instructions_header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .vx_rt_info_icon {
+      width: 22px;
+      height: 22px;
+      background: rgba(59, 130, 246, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #3b82f6;
+      font-size: 1.125rem;
+      font-weight: 700;
+      border: 2px solid #3b82f6;
+    }
+
+    .vx_rt_info_icon::before {
+      content: 'i';
+    }
+
+    .vx_rt_instructions_title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .vx_rt_steps_grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .vx_rt_instruction_step {
+      position: relative;
+      padding-left: 0;
+    }
+
+    .vx_rt_step_number {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .vx_rt_step_num_circle {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.875rem;
+      color: #ffffff;
+      flex-shrink: 0;
+    }
+
+    .vx_rt_step_title {
+      font-size:0.5rem;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .vx_rt_step_description {
+      font-size: 0.4rem;
+      color: #64748b;
+      line-height: 1.5;
+      margin-left: 2.5rem;
+    }
+
+    .vx_rt_wallet_section {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(51, 65, 85, 0.5);
+      border-radius: 16px;
+      padding: 0.5rem;
+      margin-bottom: 2rem;
+      transition: all 0.3s ease;
+    }
+
+    .vx_rt_wallet_section:hover {
+      border-color: rgba(59, 130, 246, 0.5);
+      box-shadow: 0 8px 32px rgba(59, 130, 246, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .vx_rt_section_header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .vx_rt_section_icon {
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .vx_rt_section_title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .vx_rt_section_title_logo {
+      width: 24px;
+      height: 24px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .vx_rt_section_title_logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      animation: vx_logoSpin 4s linear infinite;
+    }
+
+    @keyframes vx_logoSpin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .vx_rt_wallet_address_box {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(51, 65, 85, 0.5);
+      border-radius: 12px;
+      padding: 1rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.875rem;
+      color: #3b82f6;
+      word-break: break-all;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .vx_rt_wallet_address_box:hover {
+      background: rgba(15, 23, 42, 1);
+      border-color: rgba(59, 130, 246, 0.5);
+    }
+
+    .vx_rt_copy_button {
+      width: 100%;
+      padding: 0.875rem;
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      border: none;
+      border-radius: 12px;
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 0.875rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .vx_rt_copy_button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .vx_rt_copy_button:hover::before {
+      left: 100%;
+    }
+
+    .vx_rt_copy_icon {
+      width: 16px;
+      height: 16px;
+      border: 2px solid #ffffff;
+      border-radius: 3px;
+      position: relative;
+    }
+
+    .vx_rt_copy_icon::after {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #ffffff;
+      border-radius: 3px;
+      top: 3px;
+      left: 3px;
+      background: #3b82f6;
+    }
+
+    .vx_rt_copy_button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+    }
+
+    .vx_rt_copy_button:active {
+      transform: translateY(0);
+    }
+
+    .vx_rt_upload_section {
+      margin-bottom: 2rem;
+    }
+
+    .vx_rt_upload_area {
+      background: rgba(15, 23, 42, 0.4);
+      border: 2px dashed rgba(100, 116, 139, 0.4);
+      border-radius: 16px;
+      padding: 3rem 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .vx_rt_upload_area::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.1), transparent);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s ease, height 0.6s ease;
+      border-radius: 50%;
+    }
+
+    .vx_rt_upload_area:hover {
+      border-color: rgba(59, 130, 246, 0.6);
+      background: rgba(59, 130, 246, 0.05);
+    }
+
+    .vx_rt_upload_area:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .vx_rt_upload_area.dragover {
+      border-color: #3b82f6;
+      background: rgba(59, 130, 246, 0.1);
+      transform: scale(1.02);
+    }
+
+    .vx_rt_upload_icon {
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 1rem;
+      background: rgba(59, 130, 246, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .vx_rt_upload_icon::before {
+      content: '';
+      position: absolute;
+      width: 4px;
+      height: 20px;
+      background: #3b82f6;
+    }
+
+    .vx_rt_upload_icon::after {
+      content: '';
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border: 3px solid #3b82f6;
+      border-bottom: none;
+      border-right: none;
+      transform: rotate(45deg);
+      top: 18px;
+    }
+
+    .vx_rt_upload_text {
+      font-size: 1rem;
+      color: #e2e8f0;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      position: relative;
+      z-index: 1;
+    }
+
+    .vx_rt_upload_hint {
+      font-size: 0.875rem;
+      color: #64748b;
+      position: relative;
+      z-index: 1;
+    }
+
+    .vx_rt_file_preview {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(51, 65, 85, 0.5);
+      border-radius: 12px;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1rem;
+      animation: vx_slideDown 0.3s ease-out;
+    }
+
+    @keyframes vx_slideDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .vx_rt_file_info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .vx_rt_file_icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.1));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      position: relative;
+    }
+
+    .vx_rt_file_icon::before {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 24px;
+      background: #3b82f6;
+      border-radius: 2px;
+    }
+
+    .vx_rt_file_icon::after {
+      content: '';
+      position: absolute;
+      width: 12px;
+      height: 8px;
+      background: rgba(15, 23, 42, 0.8);
+      border-radius: 1px;
+      bottom: 14px;
+    }
+
+    .vx_rt_file_details h4 {
+      font-size: 0.875rem;
+      color: #e2e8f0;
+      margin-bottom: 0.25rem;
+    }
+
+    .vx_rt_file_size {
+      font-size: 0.75rem;
+      color: #64748b;
+    }
+
+    .vx_rt_remove_file {
+      color: #ef4444;
+      font-size: 0.875rem;
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .vx_rt_remove_file:hover {
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    .vx_rt_submit_button {
+      width: 100%;
+      padding: 1.25rem;
+      background: linear-gradient(135deg, #10b981, #059669);
+      border: none;
+      border-radius: 16px;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .vx_rt_submit_button::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.6s ease, height 0.6s ease;
+    }
+
+    .vx_rt_submit_button:hover::before {
+      width: 400px;
+      height: 400px;
+    }
+
+    .vx_rt_submit_icon {
+      width: 20px;
+      height: 20px;
+      position: relative;
+    }
+
+    .vx_rt_submit_icon::before {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 3px;
+      background: #ffffff;
+      transform: rotate(-45deg);
+      top: 4px;
+      left: 0;
+    }
+
+    .vx_rt_submit_icon::after {
+      content: '';
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border: 3px solid #ffffff;
+      border-left: none;
+      border-bottom: none;
+      transform: rotate(45deg);
+      top: 0;
+      right: 0;
+    }
+
+    .vx_rt_submit_button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(16, 185, 129, 0.5);
+    }
+
+    .vx_rt_submit_button:active {
+      transform: translateY(0);
+    }
+
+    .vx_rt_submit_button:disabled {
+      background: rgba(71, 85, 105, 0.4);
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .vx_rt_submit_button:disabled:hover {
+      transform: none;
+    }
+
+    .vx_rt_security_footer {
+      text-align: center;
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(51, 65, 85, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: #64748b;
+    }
+
+    .vx_rt_shield_icon {
+      width: 18px;
+      height: 18px;
+      background: #10b981;
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      position: relative;
+    }
+
+    .vx_rt_shield_icon::before {
+      content: '';
+      position: absolute;
+      width: 6px;
+      height: 8px;
+      border: 2px solid #ffffff;
+      border-top: none;
+      border-left: none;
+      transform: rotate(45deg);
+      top: 3px;
+      left: 4px;
+    }
+
+    .vx_rt_toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border: 1px solid rgba(59, 130, 246, 0.5);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+      transform: translateX(400px);
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 1000;
+    }
+
+    .vx_rt_toast.show {
+      transform: translateX(0);
+      opacity: 1;
+    }
+
+    .vx_rt_toast_icon {
+      width: 24px;
+      height: 24px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .vx_rt_toast_icon::before {
+      content: '';
+      position: absolute;
+      width: 6px;
+      height: 10px;
+      border: 2px solid #ffffff;
+      border-top: none;
+      border-left: none;
+      transform: rotate(45deg) translateY(-1px);
+    }
+
+    .vx_rt_toast_message {
+      color: #e2e8f0;
+      font-size: 0.875rem;
+    }
+
+    @media (max-width: 768px) {
+      .vx_rt_payment_container {
+        padding: 0.5;
+      }
+
+      .vx_rt_main_heading {
+        font-size: 0.5rem
+      }
+
+      .vx_rt_sub_heading {
+        font-size: 0.7;
+      }
+
+      .vx_rt_progress_stepper {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .vx_rt_step_connector {
+        display: none;
+      }
+
+      .vx_rt_step {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .vx_rt_payment_card {
+        padding:0.6rem;
+      }
+
+      .vx_rt_amount_value {
+        font-size: 2rem;
+      }
+
+      .vx_rt_steps_grid {
+        grid-template-columns: 1fr;
+      }
+
+      .vx_rt_card_header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .vx_rt_toast {
+        right: 1rem;
+        left: 1rem;
+        bottom: 1rem;
+      }
+
+      .vx_rt_crypto_logo {
+        width: 60px;
+        height: 60px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .vx_rt_step_label {
+        display: none;
+      }
+
+      .vx_rt_amount_value {
+        font-size: 2rem;
+      }
+
+      .vx_rt_upload_area {
+        padding: 2rem 1rem;
+      }
+
+      .vx_rt_crypto_logo {
+        width: 50px;
+        height: 50px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <%- include('../partials/user-nav.ejs', { user, page }) %>
+    <main class="dashboard-content">
+      <div class="vx_rt_payment_container">
+
+        <div class="vx_rt_header_section">
+          <div style="display: flex; justify-content: center;">
+            <div class="vx_rt_secure_badge">
+              <div class="vx_rt_secure_icon"></div>
+              <span>Secure Payment Gateway</span>
+            </div>
+          </div>
+
+          <h1 class="vx_rt_main_heading">Complete Your Deposit</h1>
+          <p class="vx_rt_sub_heading">
+            Securely deposit funds using <span class="vx_rt_crypto_name" id="cryptoDisplayName"></span> to start trading immediately
+          </p>
+
+          <div class="vx_rt_crypto_logo_display">
+            <div class="vx_rt_crypto_logo">
+              <img src="" alt="Crypto Logo" id="cryptoLogoImage">
+            </div>
+          </div>
+        </div>
+
+        <div class="vx_rt_progress_stepper">
+          <div class="vx_rt_step">
+            <div class="vx_rt_step_circle completed"></div>
+            <span class="vx_rt_step_label">Payment Method</span>
+          </div>
+          <div class="vx_rt_step_connector completed"></div>
+          <div class="vx_rt_step">
+            <div class="vx_rt_step_circle active">2</div>
+            <span class="vx_rt_step_label">Send Payment</span>
+          </div>
+          <div class="vx_rt_step_connector"></div>
+          <div class="vx_rt_step">
+            <div class="vx_rt_step_circle pending">3</div>
+            <span class="vx_rt_step_label">Confirmation</span>
+          </div>
+        </div>
+
+        <div class="vx_rt_main_content_grid">
+          <div class="vx_rt_payment_card">
+
+            <div class="vx_rt_card_header">
+              <div class="vx_rt_card_title_group">
+                <div class="vx_rt_card_icon_box"></div>
+                <div class="vx_rt_card_title_text">
+                  <h2>Payment Details</h2>
+                  <div class="vx_rt_card_subtitle">
+                    <span class="vx_rt_card_subtitle_logo">
+                      <img src="" alt="Crypto Logo" id="cryptoLogoSmall">
+                    </span>
+                    <span id="cryptoSubtitle"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="vx_rt_badge_group">
+                <div class="vx_rt_badge ssl">
+                  <span class="vx_rt_badge_icon"></span>
+                  <span>SSL Secured</span>
+                </div>
+                <div class="vx_rt_badge support">
+                  <span class="vx_rt_badge_icon"></span>
+                  <span>24/7 Support</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="vx_rt_amount_section">
+              <div class="vx_rt_amount_label">
+                <span class="vx_rt_amount_icon"></span>
+                <span>Amount to Deposit</span>
+              </div>
+              <div class="vx_rt_amount_value">
+                <span id="depositAmount"><%= amount %></span>
+                <span class="vx_rt_currency_symbol">$</span>
+              </div>
+              <div class="vx_rt_warning_banner">
+                <div class="vx_rt_warning_icon"></div>
+                <div>Send exact amount to avoid delays</div>
+              </div>
+            </div>
+
+            <div class="vx_rt_instructions_section">
+              <div class="vx_rt_instructions_header">
+                <div class="vx_rt_info_icon"></div>
+                <h3 class="vx_rt_instructions_title">How to Complete Your Payment</h3>
+              </div>
+              <div class="vx_rt_steps_grid">
+                <div class="vx_rt_instruction_step">
+                  <div class="vx_rt_step_number">
+                    <div class="vx_rt_step_num_circle">1</div>
+                    <div class="vx_rt_step_title">Send Payment</div>
+                  </div>
+                  <p class="vx_rt_step_description">Transfer $<%= amount %> to the wallet address</p>
+                </div>
+                <div class="vx_rt_instruction_step">
+                  <div class="vx_rt_step_number">
+                    <div class="vx_rt_step_num_circle">2</div>
+                    <div class="vx_rt_step_title">Upload Proof</div>
+                  </div>
+                  <p class="vx_rt_step_description">Take a screenshot of your transaction</p>
+                </div>
+                <div class="vx_rt_instruction_step">
+                  <div class="vx_rt_step_number">
+                    <div class="vx_rt_step_num_circle">3</div>
+                    <div class="vx_rt_step_title">Submit & Wait</div>
+                  </div>
+                  <p class="vx_rt_step_description">Submit proof and wait for confirmation</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="vx_rt_wallet_section">
+              <div class="vx_rt_section_header">
+                <div class="vx_rt_section_icon"></div>
+                <h3 class="vx_rt_section_title">
+                  <span class="vx_rt_section_title_logo">
+                    <img src="" alt="Crypto Logo" id="cryptoLogoWallet">
+                  </span>
+                  <span>Wallet Address</span>
+                </h3>
+              </div>
+              <div class="vx_rt_wallet_address_box" id="vxWalletAddress"></div>
+              <button class="vx_rt_copy_button" id="vxCopyBtn">
+                <span class="vx_rt_copy_icon"></span>
+                <span id="vxCopyBtnText">Copy Address</span>
+              </button>
+            </div>
+
+            <div class="vx_rt_upload_section">
+              <div class="vx_rt_section_header">
+                <div class="vx_rt_section_icon"></div>
+                <h3 class="vx_rt_section_title">Upload Payment Proof</h3>
+              </div>
+              <div class="vx_rt_upload_area" id="vxUploadArea" onclick="document.getElementById('vxFileInput').click()">
+                <div class="vx_rt_upload_icon"></div>
+                <div class="vx_rt_upload_text">Choose file or drag & drop</div>
+                <div class="vx_rt_upload_hint">PNG, JPG, GIF up to 10MB</div>
+              </div>
+              <input type="file" id="vxFileInput" accept="image/*,.pdf" style="display: none;">
+              <div id="vxFilePreview" style="display: none;"></div>
+            </div>
+
+            <button class="vx_rt_submit_button" id="vxSubmitBtn" disabled>
+              <span class="vx_rt_submit_icon"></span>
+              <span>Submit Payment Proof</span>
+            </button>
+
+            <div class="vx_rt_security_footer">
+              <div class="vx_rt_shield_icon"></div>
+              <span>Protected by 256-bit SSL encryption</span>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <div class="vx_rt_toast" id="vxToast">
+    <div class="vx_rt_toast_icon"></div>
+    <div class="vx_rt_toast_message" id="vxToastMessage"></div>
+  </div>
+
+  <script>
+    (function() {
+      let vxUploadedFile = null;
+      const vxUploadArea = document.getElementById('vxUploadArea');
+      const vxFileInput = document.getElementById('vxFileInput');
+      const vxFilePreview = document.getElementById('vxFilePreview');
+      const vxSubmitBtn = document.getElementById('vxSubmitBtn');
+
+      const cryptoData = {
+        'BTC': {
+          name: 'Btc (Bitcoin)',
+          logo: 'https://cryptologos.cc/logos/bitcoin-btc-logo.png',
+          address: '1HunL6nu6ZLqrgXPzPvLcb3Lc6JviMDy9c'
+        },
+        'USDT': {
+          name: 'USDT (ERC20)',
+          logo: 'https://cryptologos.cc/logos/tether-usdt-logo.png',
+          address: '0x54070e979527310b8f959a3532058813b1d664b7'
+        },
+        'DOGE': {
+          name: 'DOGE COIN',
+          logo: 'https://cryptologos.cc/logos/dogecoin-doge-logo.png',
+          address: 'DUT9fVWy5hMPkuNXVF1qJ5TVFmFAhVAdDP'
+        },
+        'SOL': {
+          name: 'Solana',
+          logo: 'https://cryptologos.cc/logos/solana-sol-logo.png',
+          address: '28LeFukWAwCmKCdQF4Rjvr9PR353TF5bBRzZRVMdkYbz'
+        },
+        'BNB': {
+          name: 'BNB (BEP20)',
+          logo: 'https://cryptologos.cc/logos/bnb-bnb-logo.png',
+          address: '0x54070e979527310b8f959a3532058813b1d664b7'
+        }
+      };
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const method = urlParams.get('method') || '<%= typeof method !== "undefined" ? method : "BTC" %>';
+      const crypto = cryptoData[method] || cryptoData['BTC'];
+
+      document.getElementById('cryptoDisplayName').textContent = crypto.name;
+      document.getElementById('cryptoSubtitle').textContent = crypto.name + ' Deposit';
+      document.getElementById('cryptoLogoImage').src = crypto.logo;
+      document.getElementById('cryptoLogoSmall').src = crypto.logo;
+      document.getElementById('cryptoLogoWallet').src = crypto.logo;
+      document.getElementById('vxWalletAddress').textContent = crypto.address;
+
+      ['dragenter','dragover','dragleave','drop'].forEach(function(evt) {
+        vxUploadArea.addEventListener(evt, vxPreventDefaults, false);
+      });
+
+      function vxPreventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      ['dragenter','dragover'].forEach(function(evt) {
+        vxUploadArea.addEventListener(evt, function() {
+          vxUploadArea.classList.add('dragover');
+        });
+      });
+
+      ['dragleave','drop'].forEach(function(evt) {
+        vxUploadArea.addEventListener(evt, function() {
+          vxUploadArea.classList.remove('dragover');
+        });
+      });
+
+      vxUploadArea.addEventListener('drop', function(e) {
+        const files = e.dataTransfer.files;
+        if(files.length) vxHandleFile(files[0]);
+      });
+
+      vxFileInput.addEventListener('change', function(e) {
+        if(e.target.files.length) vxHandleFile(e.target.files[0]);
+      });
+
+      function vxHandleFile(file) {
+        if(!file.type.match('image.*') && file.type !== 'application/pdf') {
+          vxShowToast('Please upload an image or PDF file');
+          return;
+        }
+        if(file.size > 10 * 1024 * 1024) {
+          vxShowToast('File size must be less than 10MB');
+          return;
+        }
+        vxUploadedFile = file;
+        vxDisplayFilePreview(file);
+        vxSubmitBtn.disabled = false;
+      }
+
+      function vxDisplayFilePreview(file) {
+        const fileSize = (file.size / 1024).toFixed(2);
+        vxFilePreview.innerHTML = '<div class="vx_rt_file_preview"><div class="vx_rt_file_info"><div class="vx_rt_file_icon"></div><div class="vx_rt_file_details"><h4>' + file.name + '</h4><div class="vx_rt_file_size">' + fileSize + ' KB</div></div></div><div class="vx_rt_remove_file" onclick="vxRemoveFile()">Remove file</div></div>';
+        vxFilePreview.style.display = 'block';
+        vxUploadArea.style.display = 'none';
+      }
+
+      window.vxRemoveFile = function() {
+        vxUploadedFile = null;
+        vxFileInput.value = '';
+        vxFilePreview.style.display = 'none';
+        vxUploadArea.style.display = 'block';
+        vxSubmitBtn.disabled = true;
+      };
+
+      function vxCopyAddress() {
+        const address = document.getElementById('vxWalletAddress').textContent;
+        navigator.clipboard.writeText(address).then(function() {
+          document.getElementById('vxCopyBtnText').textContent = 'Copied!';
+          vxShowToast('Wallet address copied to clipboard');
+          setTimeout(function() {
+            document.getElementById('vxCopyBtnText').textContent = 'Copy Address';
+          }, 2000);
+        }).catch(function() {
+          vxShowToast('Failed to copy address');
+        });
+      }
+
+      document.getElementById('vxCopyBtn').addEventListener('click', vxCopyAddress);
+
+      vxSubmitBtn.addEventListener('click', function() {
+        if(!vxUploadedFile) {
+          vxShowToast('Please upload payment proof');
+          return;
+        }
+
+        vxSubmitBtn.disabled = true;
+        vxSubmitBtn.innerHTML = '<span class="vx_rt_submit_icon"></span><span>Processing...</span>';
+
+        const amount = document.getElementById('depositAmount').textContent;
+        const payload = {
+          amount: amount,
+          cryptocurrency: method,
+          proof: (vxUploadedFile && vxUploadedFile.name) ? vxUploadedFile.name : 'proof'
+        };
+
+        fetch('/user/payment/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if(!data || !data.success) {
+            vxShowToast(data && data.message ? data.message : 'Submission failed');
+            vxSubmitBtn.disabled = false;
+            vxSubmitBtn.innerHTML = '<span class="vx_rt_submit_icon"></span><span>Submit Payment Proof</span>';
+            return;
+          }
+          vxShowToast('Payment proof submitted successfully. Admin will review shortly.');
+          vxSubmitBtn.innerHTML = '<span class="vx_rt_submit_icon"></span><span>Submitted Successfully</span>';
+          vxSubmitBtn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+          setTimeout(function() {
+            window.location.href = (data.redirect || '/user/dashboard');
+          }, 1800);
+        })
+        .catch(function(err) {
+          console.error(err);
+          vxShowToast('Network error occurred');
+          vxSubmitBtn.disabled = false;
+          vxSubmitBtn.innerHTML = '<span class="vx_rt_submit_icon"></span><span>Submit Payment Proof</span>';
+        });
+      });
+
+      function vxShowToast(msg) {
+        const toast = document.getElementById('vxToast');
+        const message = document.getElementById('vxToastMessage');
+        message.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(function() {
+          toast.classList.remove('show');
+        }, 3000);
+      }
+    })();
+  </script>
+</body>
+</html>
