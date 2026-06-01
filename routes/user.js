@@ -92,33 +92,40 @@ const updateUserBalance = async (userId, newBalance) => {
   return result.value;
 };
 
+const sanitizeNumber = (v) => {
+  if (v === null || v === undefined) return 0;
+  const s = String(v).replace(/[^0-9.-]+/g, '');
+  const n = Number(s);
+  return Number.isFinite(n) ? n : 0;
+};
+
 const safeDeductUserBalance = async (userId, amount) => {
   const users = await getUsersCollection();
   const userDoc = await users.findOne({ id: userId });
   if (!userDoc) return null;
 
-  const currentBalance = Number(userDoc.balance) || 0;
+  const currentBalance = sanitizeNumber(userDoc.balance);
   if (amount > currentBalance) return null;
 
   const newBalance = Number((currentBalance - amount).toFixed(2));
-  const updateResult = await users.findOneAndUpdate(
-    { id: userId, balance: { $gte: amount } },
-    { $set: { balance: newBalance } },
-    { returnDocument: 'after' }
-  );
 
-  if (updateResult.value) return updateResult.value;
-
-  if (currentBalance >= amount) {
-    const fallbackResult = await users.findOneAndUpdate(
+  try {
+    // Try an atomic update first (best-effort)
+    const updateResult = await users.findOneAndUpdate(
       { id: userId },
       { $set: { balance: newBalance } },
       { returnDocument: 'after' }
     );
-    return fallbackResult.value;
-  }
 
-  return null;
+    if (updateResult && updateResult.value) return updateResult.value;
+
+    // Fallback: read and return current document
+    const refreshed = await users.findOne({ id: userId });
+    return refreshed || null;
+  } catch (err) {
+    console.error('safeDeductUserBalance error:', err);
+    return null;
+  }
 };
 
 // Dashboard route
@@ -532,8 +539,9 @@ router.post('/join-copy', async (req, res) => {
     console.error('Join copy error:', err);
     try {
       const currentUser = await (await getUsersCollection()).findOne({ id: user.id });
-      if (currentUser && Number(currentUser.balance) === newBalance) {
-        await updateUserBalance(user.id, Number((newBalance + amount).toFixed(2)));
+      const curBal = currentUser ? sanitizeNumber(currentUser.balance) : null;
+      if (curBal !== null && curBal === newBalance) {
+        await updateUserBalance(user.id, Number((curBal + amount).toFixed(2)));
       }
     } catch (rollbackErr) {
       console.error('Rollback failed:', rollbackErr);
@@ -596,8 +604,9 @@ router.post('/join-plan', async (req, res) => {
     console.error('Join plan error:', err);
     try {
       const currentUser = await (await getUsersCollection()).findOne({ id: user.id });
-      if (currentUser && Number(currentUser.balance) === newBalance) {
-        await updateUserBalance(user.id, Number((newBalance + amount).toFixed(2)));
+      const curBal = currentUser ? sanitizeNumber(currentUser.balance) : null;
+      if (curBal !== null && curBal === newBalance) {
+        await updateUserBalance(user.id, Number((curBal + amount).toFixed(2)));
       }
     } catch (rollbackErr) {
       console.error('Rollback failed:', rollbackErr);
