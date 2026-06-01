@@ -48,7 +48,8 @@ app.use(session({
   secret: 'trading-platform-secret-key',
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 } // 24 hours
+  // Increase session lifetime to 30 days so active trades remain visible
+  cookie: { secure: false, maxAge: 30 * 24 * 60 * 60 * 1000 } // 30 days
 }));
 
 // Set view engine to EJS
